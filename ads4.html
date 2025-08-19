@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aryan Designer Studio</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header img {
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      padding: 40px 8%;
+    }
+
+    .product-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .product-card img {
+  width: 100%;
+  height: auto;     /* keeps natural height */
+  object-fit: contain;  /* no crop, full photo visible */
+  background: #f8f8f8;  /* subtle background behind photo */
+}
+
+
+    .product-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .product-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      font-size: 0.95rem;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border: 1px solid #111;
+      text-decoration: none;
+      color: #111;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #111;
+      color: #fff;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0;
+      gap: 10px;
+    }
+
+    .pagination button {
+      padding: 8px 14px;
+      border: 1px solid #111;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .pagination button:hover {
+      background: #111;
+      color: #fff;
+    }
+
+    .pagination button.active {
+      background: #111;
+      color: #fff;
+    }
+
+    /* Responsive Tweak */
+    @media (max-width: 768px) {
+      .product-grid {
+        gap: 25px;
+        padding: 20px;
+      }
+
+      .product-card img {
+        height: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="aryan.png" alt="Logo"> <!-- Replace with your logo -->
+    <h1>Aryan Designer Studio</h1>
+  </header>
+
+  <div id="product-container" class="product-grid"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <script>
+    const allProducts = [
+      {id:1, title:"Oversized Linen Shirt", price:"₹2499", image:"krrish.jpg"},
+      {id:2, title:"Slim Fit Black Blazer", price:"₹4999", image:"krrish2.jpg"},
+      {id:3, title:"White Cotton Kurta", price:"₹1999", image:"krrish3.jpg"},
+      {id:4, title:"Casual Blue Denim", price:"₹1799", image:"krrish4.jpg"},
+      {id:5, title:"Premium Saree", price:"₹3499", image:"krrish5.jpg"},
+      {id:6, title:"Designer Lehenga", price:"₹5999", image:"krrish7.jpg"},
+        {id:7, title:"Elegant Anarkali Suit", price:"₹3999", image:"photo.jpg"},
+      // Add more products...
+    ];
+
+    const productsPerPage = 20;
+    let currentPage = 1;
+
+    function loadProducts(page) {
+      const container = document.getElementById('product-container');
+      container.innerHTML = "";
+
+      const start = (page - 1) * productsPerPage;
+      const end = start + productsPerPage;
+      const pageProducts = allProducts.slice(start, end);
+
+      pageProducts.forEach(product => {
+        const whatsappMessage = `Hello, I'm interested in ${product.title}.\nPrice: ${product.price}\nImage: ${location.origin}/${product.image}`;
+        const whatsappLink = `https://wa.me/916355220940?text=${encodeURIComponent(whatsappMessage)}`;
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.title}">
+          <div class="product-info">
+            <div class="product-title">${product.title}</div>
+            <div class="product-price">${product.price}</div>
+            <a href="${whatsappLink}" target="_blank" class="btn">Shop Now</a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      loadPagination();
+    }
+
+    function loadPagination() {
+      const totalPages = Math.ceil(allProducts.length / productsPerPage);
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          loadProducts(currentPage);
+        });
+        pagination.appendChild(btn);
+      }
+    }
+
+    loadProducts(currentPage);
+  </script>
+
+</body>
+</html>
